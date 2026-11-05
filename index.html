@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f3eb">
+  <title>Matdata — Indian Politician Education Comparison</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172a3a;
+      --muted: #64717b;
+      --paper: #f6f3eb;
+      --card: #fffefa;
+      --line: #e6e2d8;
+      --saffron: #d65b2d;
+      --green: #2d715a;
+      --blue: #244b68;
+      --shadow: 0 16px 42px rgba(30, 43, 48, .08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: radial-gradient(ellipse at 87% 2%, rgba(232, 173, 92, .16), transparent 27rem), var(--paper);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+    }
+    button, input, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; }
+    .topbar {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 22px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+    .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      color: white;
+      background: var(--blue);
+      font-size: 19px;
+      font-weight: 800;
+    }
+    .brand-name { font-size: 20px; font-weight: 800; letter-spacing: -.5px; }
+    .brand-tag { color: var(--muted); font-size: 12px; }
+    .top-link { color: var(--blue); font-size: 13px; font-weight: 700; text-decoration: none; }
+    main { max-width: 1160px; margin: 0 auto; padding: 30px 28px 64px; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 46px 48px;
+      color: #fffdf6;
+      background: var(--blue);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 250px;
+      height: 250px;
+      right: 7%;
+      top: -128px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 50%;
+      box-shadow: 0 0 0 28px rgba(255,255,255,.035), 0 0 0 58px rgba(255,255,255,.025);
+      pointer-events: none;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #f2bf8e;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 19px; height: 2px; background: currentColor; }
+    h1 { max-width: 690px; margin: 16px 0 12px; font-size: clamp(30px, 5vw, 48px); line-height: 1.18; letter-spacing: -1.2px; }
+    .hero p { max-width: 680px; margin: 0; color: #d9e2e8; font-size: 15px; line-height: 1.8; }
+    .hero-note { display: flex; align-items: center; gap: 9px; margin-top: 25px; color: #f5e1c7; font-size: 12px; }
+    .hero-note span { color: #edb378; font-size: 18px; }
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin: 38px 0 17px;
+    }
+    .section-heading h2 { margin: 0; font-size: 21px; letter-spacing: -.4px; }
+    .section-heading p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+    .count { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, .75fr); gap: 18px; align-items: start; }
+    .card { padding: 23px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 5px 18px rgba(30,43,48,.035); }
+    .card h3 { margin: 0 0 5px; font-size: 16px; }
+    .card-intro { margin: 0 0 21px; color: var(--muted); font-size: 12px; line-height: 1.65; }
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    label { color: #33434d; font-size: 12px; font-weight: 700; }
+    input, select {
+      width: 100%;
+      min-height: 43px;
+      padding: 10px 12px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid #dcded9;
+      border-radius: 9px;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    input:focus, select:focus { border-color: #6689a0; box-shadow: 0 0 0 3px rgba(36,75,104,.11); }
+    .hint { margin: -2px 0 0; color: #79838a; font-size: 11px; line-height: 1.5; }
+    .form-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 17px; }
+    .button {
+      min-height: 41px;
+      padding: 9px 15px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .button:hover { background: #f7f6f1; }
+    .button.primary { color: white; background: var(--saffron); border-color: var(--saffron); }
+    .button.primary:hover { background: #bd4d26; }
+    .button:focus-visible, a:focus-visible { outline: 3px solid #e8ad5c; outline-offset: 3px; }
+    .source-list { display: grid; gap: 10px; }
+    .source-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px;
+      background: #f8f7f1;
+      border: 1px solid #eeece4;
+      border-radius: 11px;
+      text-decoration: none;
+    }
+    .source-link:hover { border-color: #d5d9d3; background: #f3f2eb; }
+    .source-link strong { display: block; font-size: 12px; }
+    .source-link small { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
+    .external { color: var(--green); font-size: 16px; }
+    .note-box { margin-top: 15px; padding: 13px; color: #665339; background: #fbf3e5; border-radius: 10px; font-size: 11px; line-height: 1.65; }
+    .roster { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; }
+    .roster-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 15px; }
+    .roster-toolbar input { max-width: 360px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .politician {
+      padding: 17px;
+      background: #f8f7f1;
+      border: 1px solid #eeece4;
+      border-radius: 12px;
+    }
+    .politician h4 { margin: 0; font-size: 15px; }
+    .politician .politician-role { margin: 5px 0 12px; color: var(--muted); font-size: 11px; }
+    .politician dl { display: grid; grid-template-columns: 90px 1fr; gap: 8px 10px; margin: 0; font-size: 11px; line-height: 1.5; }
+    .politician dt { color: var(--muted); font-weight: 700; }
+    .politician dd { margin: 0; }
+    .politician .source { display: inline-block; margin-top: 13px; color: var(--green); font-size: 11px; font-weight: 700; }
+    .roster-empty { grid-column: 1 / -1; }
+    .compare-card { margin-top: 19px; }
+    .compare-top { display: flex; justify-content: space-between; align-items: center; gap: 15px; }
+    .compare-top h3 { margin-bottom: 4px; }
+    .compare-top p { margin: 0; color: var(--muted); font-size: 11px; }
+    .compare-controls { display: flex; gap: 8px; }
+    .compare-controls select { min-width: 145px; min-height: 38px; font-size: 11px; }
+    .compare-controls .button { min-height: 38px; padding: 8px 12px; }
+    .comparison { margin-top: 19px; overflow-x: auto; }
+    .comparison table { width: 100%; border-collapse: collapse; text-align: left; }
+    .comparison th, .comparison td { min-width: 145px; padding: 13px 12px; border-bottom: 1px solid #eeece5; vertical-align: top; font-size: 12px; }
+    .comparison th { color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+    .comparison td:first-child { min-width: 120px; color: #59656c; font-weight: 700; }
+    .person-name { color: var(--ink); font-size: 13px; font-weight: 800; text-transform: none; letter-spacing: 0; }
+    .level { display: inline-block; margin-top: 5px; padding: 4px 8px; color: #315d4c; background: #e9f2ec; border-radius: 20px; font-size: 10px; }
+    .difference { display: flex; align-items: flex-start; gap: 10px; margin-top: 15px; padding: 13px 15px; background: #eef4f6; border-radius: 10px; }
+    .difference-icon { color: var(--blue); font-size: 16px; }
+    .difference strong { display: block; font-size: 11px; }
+    .difference p { margin: 4px 0 0; color: #53636c; font-size: 11px; line-height: 1.6; }
+    .empty { padding: 26px 15px; color: var(--muted); background: #f8f7f1; border-radius: 11px; text-align: center; font-size: 12px; line-height: 1.7; }
+    .empty strong { display: block; margin-bottom: 3px; color: var(--ink); font-size: 13px; }
+    .people-list { display: grid; gap: 9px; margin-top: 17px; }
+    .person-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px; background: #f8f7f1; border-radius: 9px; }
+    .person-row strong { display: block; font-size: 12px; }
+    .person-row small { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
+    .remove-button { padding: 6px 8px; color: #9c4a34; background: transparent; border: 0; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 700; }
+    .remove-button:hover { background: #f7e9e3; }
+    .privacy { margin-top: 12px; color: #7a858a; font-size: 10px; line-height: 1.6; }
+    footer { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; padding-top: 17px; border-top: 1px solid var(--line); color: #7a858a; font-size: 10px; line-height: 1.6; }
+    @media (max-width: 760px) {
+      .topbar { padding: 17px 18px; }
+      main { padding: 15px 18px 42px; }
+      .hero { padding: 32px 25px; border-radius: 19px; }
+      .layout { grid-template-columns: 1fr; }
+      .roster { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .section-heading { align-items: start; }
+      .compare-top { align-items: start; flex-direction: column; }
+      .compare-controls { width: 100%; flex-wrap: wrap; }
+      .compare-controls select { flex: 1 1 140px; min-width: 0; }
+      footer { flex-direction: column; }
+    }
+    @media (max-width: 470px) {
+      .field-grid, .roster { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .card { padding: 18px; }
+      .hero { padding: 28px 21px; }
+      .top-link { max-width: 120px; text-align: right; }
+      .section-heading h2 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Matdata home">
+      <span class="brand-mark" aria-hidden="true">M</span>
+      <span><span class="brand-name">Matdata</span><br><span class="brand-tag">Informed choices start with facts</span></span>
+    </a>
+    <a class="top-link" href="https://www.eci.gov.in/" target="_blank" rel="noopener noreferrer">Election Commission of India ↗</a>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <span class="eyebrow">Indian Politicians · Education Profiles</span>
+      <h1 id="page-title">Know the qualifications.<br>Make your own comparison.</h1>
+      <p>Explore a curated list of Indian political leaders, their public roles, constituencies, parties, and declared education. Then choose any two below to compare.</p>
+      <div class="hero-note"><span aria-hidden="true">✳</span> Education is one piece of information—not a measure of a person's ability or public service.</div>
+    </section>
+
+    <div class="section-heading">
+      <div>
+        <h2>Indian politician profiles</h2>
+        <p>Browse each person's information first. The comparison option is below the list.</p>
+      </div>
+      <span class="count" id="candidate-count">0 politicians</span>
+    </div>
+
+    <section class="card" aria-labelledby="roster-title">
+      <h3 id="roster-title">Politician list</h3>
+      <p class="card-intro">A curated starter list, not every elected representative in India. Source links open a search to help verify profile details; check the relevant official affidavit.</p>
+      <div class="roster-toolbar">
+        <label class="sr-only" for="politician-search">Search politician profiles</label>
+        <input id="politician-search" type="search" placeholder="Search by name, party, role, or education">
+        <span class="count" id="visible-count"></span>
+      </div>
+      <div class="roster" id="politician-roster"></div>
+    </section>
+
+    <section class="card compare-card" aria-labelledby="compare-title">
+      <div class="compare-top">
+        <div>
+          <h3 id="compare-title">Compare two politicians</h3>
+          <p>Choose two names from the list above, then press Compare.</p>
+        </div>
+        <div class="compare-controls">
+          <select id="candidate-a" aria-label="First politician"><option value="">Choose first name</option></select>
+          <select id="candidate-b" aria-label="Second politician"><option value="">Choose second name</option></select>
+          <button class="button" id="compare-button" type="button">Compare</button>
+        </div>
+      </div>
+      <div class="comparison" id="comparison-result" aria-live="polite">
+        <div class="empty"><strong>Your comparison will appear here</strong>Choose two different names above, then press Compare.</div>
+      </div>
+      <p class="privacy">Education details should be verified against affidavits or reliable official biographies. Education alone does not establish a person's ability or public-service record.</p>
+    </section>
+
+    <aside class="note-box"><strong>Sources:</strong> <a href="https://affidavit.eci.gov.in/" target="_blank" rel="noopener noreferrer">Election Commission candidate affidavits</a> · <a href="https://www.myneta.info/LokSabha2024/" target="_blank" rel="noopener noreferrer">ADR / MyNeta Lok Sabha 2024</a>. Source links in profiles are targeted searches, not official verification.</aside>
+
+    <footer>
+      <span>Matdata is an independent civic-information demo, not an official government website.</span>
+      <span>Verify each profile against the relevant election affidavit.</span>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      const educationLevels = {
+        1: "Class 10 or below",
+        2: "Class 12 / Higher secondary",
+        3: "Diploma / Certificate",
+        4: "Graduate",
+        5: "Postgraduate",
+        6: "Doctorate"
+      };
+      const politicians = [
+        {
+          id: "narendra-modi",
+          name: "Narendra Modi",
+          party: "Bharatiya Janata Party (BJP)",
+          role: "Prime Minister of India; Member of Parliament",
+          constituency: "Varanasi, Uttar Pradesh",
+          qualification: "M.A. in Political Science, Gujarat University (as declared in election affidavit)",
+          level: 5,
+          sourceUrl: "https://www.google.com/search?q=Narendra+Modi+2024+election+affidavit+education"
+        },
+        {
+          id: "rahul-gandhi",
+          name: "Rahul Gandhi",
+          party: "Indian National Congress (INC)",
+          role: "Member of Parliament (Lok Sabha)",
+          constituency: "Rae Bareli, Uttar Pradesh",
+          qualification: "M.Phil. in Development Studies, University of Cambridge (as declared in election affidavit)",
+          level: 5,
+          sourceUrl: "https://www.google.com/search?q=Rahul+Gandhi+2024+election+affidavit+education"
+        },
+        {
+          id: "shashi-tharoor",
+          name: "Shashi Tharoor",
+          party: "Indian National Congress (INC)",
+          role: "Member of Parliament (Lok Sabha)",
+          constituency: "Thiruvananthapuram, Kerala",
+          qualification: "Ph.D. in International Relations, The Fletcher School, Tufts University",
+          level: 6,
+          sourceUrl: "https://www.google.com/search?q=Shashi+Tharoor+2024+election+affidavit+education"
+        },
+        {
+          id: "s-jaishankar",
+          name: "S. Jaishankar",
+          party: "Bharatiya Janata Party (BJP)",
+          role: "Union Minister of External Affairs; Member of Parliament (Rajya Sabha)",
+          constituency: "Gujarat (Rajya Sabha)",
+          qualification: "M.A., M.Phil. and Ph.D. in International Relations, Jawaharlal Nehru University",
+          level: 6,
+          sourceUrl: "https://www.google.com/search?q=S.+Jaishankar+education+official+biography"
+        },
+        {
+          id: "nirmala-sitharaman",
+          name: "Nirmala Sitharaman",
+          party: "Bharatiya Janata Party (BJP)",
+          role: "Union Minister of Finance; Member of Parliament (Rajya Sabha)",
+          constituency: "Karnataka (Rajya Sabha)",
+          qualification: "M.A. in Economics, Jawaharlal Nehru University",
+          level: 5,
+          sourceUrl: "https://www.google.com/search?q=Nirmala+Sitharaman+education+official+biography"
+        },
+        {
+          id: "amit-shah",
+          name: "Amit Shah",
+          party: "Bharatiya Janata Party (BJP)",
+          role: "Union Minister of Home Affairs; Member of Parliament (Lok Sabha)",
+          constituency: "Gandhinagar, Gujarat",
+          qualification: "B.Sc. in Biochemistry, Gujarat University (as declared in election affidavit)",
+          level: 4,
+          sourceUrl: "https://www.google.com/search?q=Amit+Shah+2024+election+affidavit+education"
+        },
+        {
+          id: "yogi-adityanath",
+          name: "Yogi Adityanath",
+          party: "Bharatiya Janata Party (BJP)",
+          role: "Chief Minister of Uttar Pradesh",
+          constituency: "Uttar Pradesh",
+          qualification: "B.Sc. in Mathematics, Hemwati Nandan Bahuguna Garhwal University",
+          level: 4,
+          sourceUrl: "https://www.google.com/search?q=Yogi+Adityanath+education+official+biography"
+        }
+      ];
+      const roster = document.getElementById("politician-roster");
+      const search = document.getElementById("politician-search");
+      const selectA = document.getElementById("candidate-a");
+      const selectB = document.getElementById("candidate-b");
+      const result = document.getElementById("comparison-result");
+
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, character => ({
+          "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+        })[character]);
+      }
+
+      function renderRoster() {
+        const query = search.value.trim().toLowerCase();
+        const visible = politicians.filter(person =>
+          [person.name, person.party, person.role, person.constituency, person.qualification]
+            .some(value => value.toLowerCase().includes(query))
+        );
+        document.getElementById("visible-count").textContent = `${visible.length} shown`;
+        roster.innerHTML = visible.length ? visible.map(person => `
+          <article class="politician">
+            <h4>${escapeHtml(person.name)}</h4>
+            <p class="politician-role">${escapeHtml(person.role)}</p>
+            <dl>
+              <dt>Party</dt><dd>${escapeHtml(person.party)}</dd>
+              <dt>Constituency</dt><dd>${escapeHtml(person.constituency)}</dd>
+              <dt>Education</dt><dd>${escapeHtml(person.qualification)}<br><span class="level">${escapeHtml(educationLevels[person.level])}</span></dd>
+            </dl>
+            <a class="source" href="${escapeHtml(person.sourceUrl)}" target="_blank" rel="noopener noreferrer">Search source ↗</a>
+          </article>
+        `).join("") : '<div class="empty roster-empty"><strong>No matching politicians</strong>Try a different name, party, role, or education keyword.</div>';
+      }
+
+      function renderComparison() {
+        const first = politicians.find(person => person.id === selectA.value);
+        const second = politicians.find(person => person.id === selectB.value);
+        if (!first || !second) {
+          result.innerHTML = '<div class="empty"><strong>Choose two politicians</strong>Select a name in both boxes, then press Compare.</div>';
+          return;
+        }
+        if (first.id === second.id) {
+          result.innerHTML = '<div class="empty"><strong>Choose two different politicians</strong>The same person is selected in both boxes.</div>';
+          return;
+        }
+        const difference = Math.abs(first.level - second.level);
+        const summary = difference === 0
+          ? "Both profiles are in the same broad education category."
+          : `The broad education categories differ by ${difference} ${difference === 1 ? "level" : "levels"}.`;
+        result.innerHTML = `
+          <table>
+            <thead><tr><th>Information</th><th class="person-name">${escapeHtml(first.name)}</th><th class="person-name">${escapeHtml(second.name)}</th></tr></thead>
+            <tbody>
+              <tr><td>Party</td><td>${escapeHtml(first.party)}</td><td>${escapeHtml(second.party)}</td></tr>
+              <tr><td>Public role</td><td>${escapeHtml(first.role)}</td><td>${escapeHtml(second.role)}</td></tr>
+              <tr><td>Constituency</td><td>${escapeHtml(first.constituency)}</td><td>${escapeHtml(second.constituency)}</td></tr>
+              <tr><td>Declared education</td><td>${escapeHtml(first.qualification)}<br><span class="level">${escapeHtml(educationLevels[first.level])}</span></td><td>${escapeHtml(second.qualification)}<br><span class="level">${escapeHtml(educationLevels[second.level])}</span></td></tr>
+              <tr><td>Sources</td><td><a href="${escapeHtml(first.sourceUrl)}" target="_blank" rel="noopener noreferrer">Search source ↗</a></td><td><a href="${escapeHtml(second.sourceUrl)}" target="_blank" rel="noopener noreferrer">Search source ↗</a></td></tr>
+            </tbody>
+          </table>
+          <div class="difference"><span class="difference-icon" aria-hidden="true">↔</span><span><strong>Education comparison</strong><p>${summary} This is only a comparison of education details, not a judgment of either person's ability or public service.</p></span></div>
+        `;
+      }
+
+      politicians.forEach(person => {
+        const optionA = document.createElement("option");
+        optionA.value = person.id;
+        optionA.textContent = person.name;
+        selectA.append(optionA);
+        const optionB = document.createElement("option");
+        optionB.value = person.id;
+        optionB.textContent = person.name;
+        selectB.append(optionB);
+      });
+
+      search.addEventListener("input", renderRoster);
+      document.getElementById("compare-button").addEventListener("click", renderComparison);
+      renderRoster();
+      document.getElementById("candidate-count").textContent = `${politicians.length} politicians`;
+    })();
+  </script>
+</body>
+</html>
